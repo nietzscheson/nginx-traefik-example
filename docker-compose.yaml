@@ -1,19 +1,25 @@
-version: '3.3'
+version: '3.5'
 
 services:
-  reverse-proxy:
-    image: traefik # The official Traefik docker image
-    command: -c /dev/null --web --docker --logLevel=INFO --defaultEntryPoints='https' --entryPoints="Name:https Address::443 TLS:/certs/localhost/localhost.crt,/certs/localhost/localhost.key" --entryPoints="Name:http Address::80 Redirect.EntryPoint:https"
-
-    ports:
-      - "8080:8080" # The Web UI (enabled by --api)
-      - "443:443" # The HTTPS port
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock # So that Traefik can listen to the Docker events
-      - ./certs:/certs
-  
   nginx:
-    image: nginx:latest
-    labels: 
-      - "traefik.frontend.rule=Host:nginx.dev"
-      - "traefik.backend=nginx"
+    image: nginx:1.15-alpine
+    labels:
+      - traefik.backend=nginx
+      - traefik.frontend.rule=Host:localhost
+
+  traefik:
+    image: traefik:1.7
+    command: -c /dev/null
+      - "--api"
+      - "--docker"
+      - "--defaultentrypoints=https,http"
+      - "--entrypoints=Name:http Address::80 Redirect.EntryPoint:https"
+      - "--entrypoints=Name:https Address::443 TLS:/certs/localhost/localhost.crt,/certs/localhost/localhost.key"
+    ports:
+      - "8080:8080"
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $PWD/.docker/traefik/certs/localhost:/certs/localhost
+
