@@ -16,20 +16,19 @@ Step 2: Clone repository
 $ git clone git@github.com:nietzscheson/nginx-traefik-example.git
 ```
 
-Step 3: Install docker dependecies
--------------------------
-
-```console
-$ docker-compose up --build -d
-```
-
-Step 4: Create SSL certs
+Step 3: Create SSL certs
 -------------------------
 
 ```console
 $ bin/mkcert.sh
 ```
 
+Step 4: Install docker dependecies
+-------------------------
+
+```console
+$ docker-compose up --build -d
+```
 -------------------------
 
 That's all. Try and fun!!!
