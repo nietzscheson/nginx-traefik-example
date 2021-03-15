@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   nginx:
-    image: nginx:1.15-alpine
+    image: nginx:1.19.8-alpine
     labels:
       - traefik.backend=nginx
       - traefik.frontend.rule=Host:localhost
